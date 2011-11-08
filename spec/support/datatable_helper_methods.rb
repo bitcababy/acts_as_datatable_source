@@ -15,7 +15,7 @@ module DatatableHelperMethods
 			"bRegex_1"=>"false",
 			"bSearchable_1"=>"true",
 			"iSortingCols"=>"1",
-			"iSortCol_0"=>"1",
+			"iSortCol_0"=>"0",
 			"sSortDir_0"=>"asc",
 			"bSortable_0"=>"false",
 			"bSortable_1"=>"true",

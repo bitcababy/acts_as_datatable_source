@@ -1,5 +1,11 @@
+require 'rubygems'
+
+ENV["RAILS_ENV"] = "test"
+
 $LOAD_PATH << "." unless $LOAD_PATH.include?(".")
 require 'logger'
+require 'factory_girl'
+
 
 begin
   require "rubygems"
@@ -14,11 +20,13 @@ begin
   Bundler.setup
 rescue Bundler::GemNotFound
   raise RuntimeError, "Bundler couldn't find some gems." +
-    "Did you run \`bundlee install\`?"
+    "Did you run \`bundle install\`?"
 end
 
 Bundler.require
-require File.expand_path('../../lib/js_datatable', __FILE__)
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path('../../lib/acts_as_datatable_source', __FILE__)
+
 require 'ammeter/init'
 
 unless [].respond_to?(:freq)
@@ -63,7 +71,6 @@ if File.exists?(database_yml)
     ActiveRecord::Migration.verbose = false
     
     load(File.dirname(__FILE__) + '/schema.rb')
-    load(File.dirname(__FILE__) + '/models.rb')
   end  
   
 else
@@ -71,10 +78,34 @@ else
 end
 
 def clean_database!
-  models = [DatatableModel]
+  models = [TestModel]
   models.each do |model|
     ActiveRecord::Base.connection.execute "DELETE FROM #{model.table_name}"
   end
 end
 
 clean_database!
+
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/factories/**/*.rb"].each { |f| require f }
+
+# RSpec.configure do |config|
+#   # == Mock Framework
+#   #
+#   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
+#   #
+#   # config.mock_with :mocha
+#   # config.mock_with :flexmock
+#   # config.mock_with :rr
+#   config.mock_with :rspec
+# 
+#   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
+#   config.fixture_path = "#{::Rails.root}/spec/fixtures"
+# 
+#   # If you're not using ActiveRecord, or you'd prefer not to run each of your
+#   # examples within a transaction, remove the following line or assign false
+#   # instead of true.
+#   config.use_transactional_fixtures = true
+# end
+

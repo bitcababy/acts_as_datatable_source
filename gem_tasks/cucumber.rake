@@ -2,6 +2,7 @@ require 'cucumber/rake/task'
 require 'cucumber/platform'
 
 Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "--format pretty"
   t.fork = false
 end
 

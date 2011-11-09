@@ -100,8 +100,17 @@ describe Datatable::Request do
 	
 	context "searchable-related methods" do
 		describe "#searchable?" do
+			it "should return false if there's nothing to search for" do
+				@obj = Datatable::Request.new(@opts)
+				@obj.searchable?.should be_false
+			end
 			it "should return true if any bSearchables is true and the search string isn't empty" do
 				make_searchable(@opts)
+				@obj = Datatable::Request.new(@opts)
+				@obj.searchable?.should be_true
+			end
+			it "should return true if sSearch isn't empty" do
+				@opts["sSearch"] = "foo"
 				@obj = Datatable::Request.new(@opts)
 				@obj.searchable?.should be_true
 			end

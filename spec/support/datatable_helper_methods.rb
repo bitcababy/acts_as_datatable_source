@@ -4,22 +4,32 @@ module DatatableHelperMethods
 			"sEcho"=>"1",
 			"iColumns"=>columns.count,
 			"sColumns"=> columns.join(","),
-			"iDisplayStart"=>"1",
+			"iDisplayStart"=>"0",
 			"iDisplayLength"=>"10",
 			"sSearch"=>"",
 			"bRegex"=>"false",
-			"sSearch_0"=>"",
-			"bRegex_0"=>"false",
-			"bSearchable_0"=>"true",
-			"sSearch_1"=>"",
-			"bRegex_1"=>"false",
-			"bSearchable_1"=>"true",
-			"iSortingCols"=>"1",
-			"iSortCol_0"=>"0",
-			"sSortDir_0"=>"asc",
-			"bSortable_0"=>"false",
-			"bSortable_1"=>"true",
-		}
+			"iSortingCols"=>"0",
+			}
+		columns.count.times do |i|
+			opts["bSortable_#{i}"] = "false"
+			opts["bSearchable_#{i}"] = "false"
+			opts["bRegex_#{i}"] = "false"
+			opts["sSearch_#{i}"] = ""
+		end		
 		return opts
 	end
+	
+	def make_searchable(opts)
+		opts["iSearchCols"] = "1"
+		opts["sSearch"] = ""
+		opts["bSearchable_0"] = "true"
+		opts["sSearch_0"] = "foo"
+	end
+	
+	def make_sortable(opts)
+		opts["iSortingCols"] = "1"
+		opts["iSortCol_0"] = 0
+		opts["sSortDir_0"] = "asc"
+	end
+	
 end

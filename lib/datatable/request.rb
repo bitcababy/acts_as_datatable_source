@@ -55,9 +55,9 @@ module Datatable
 
 		def searchable?
 			return true unless @sSearch.empty?
-			return false unless @bSearchables.any? {|v| v}
+			# return false unless @bSearchables.any? {|v| v}
 			(@bSearchables.count).times do |i|
-				return true if @bSearchables[i] && !bSearches[i].empty?
+				return true if @bSearchables[i] && !@bSearches[i].empty?
 			end
 			return false
 		end

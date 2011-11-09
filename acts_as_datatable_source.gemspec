@@ -15,16 +15,14 @@ Gem::Specification.new do |s|
 
 	s.rdoc_options     = ["--charset=UTF-8"]
 
-s.rubygems_version = ">= 1.6.1"
+	s.rubygems_version = ">= 1.6.1"
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
 
-  s.add_dependency "rails", "~> 3.1.1"
-
   s.add_runtime_dependency 		"rails", "~> 3.1.1"
   s.add_runtime_dependency 		"json"
-	s.add_runtime_dependency 		'gherkin', '~> 2.6.0'
-	s.add_runtime_dependency 		'term-ansicolor', '>= 1.0.6'
+	s.add_development_dependency 		'gherkin', '~> 2.6.0'
+	s.add_development_dependency 		'term-ansicolor', '>= 1.0.6'
  	s.add_development_dependency 'rspec', '~> 2.5'
   s.add_development_dependency 'ammeter', '~> 0.1.3'
   s.add_development_dependency 'sqlite3-ruby'
@@ -33,6 +31,7 @@ s.rubygems_version = ">= 1.6.1"
   s.add_development_dependency 'cucumber'
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency 'rb-fsevent'
   s.add_development_dependency 'haml'
   s.require_paths = ['lib']
 

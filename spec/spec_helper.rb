@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require 'rubygems'
 
 ENV["RAILS_ENV"] = "test"
@@ -5,7 +8,6 @@ ENV["RAILS_ENV"] = "test"
 $LOAD_PATH << "." unless $LOAD_PATH.include?(".")
 require 'logger'
 require 'factory_girl'
-
 
 begin
   require "rubygems"

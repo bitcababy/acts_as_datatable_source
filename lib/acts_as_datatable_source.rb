@@ -7,6 +7,4 @@ require 'datatable/request'
 
 if defined?(ActiveRecord::Base)
   ActiveRecord::Base.extend ActsAsDatatableSource::Base
-else
-	foo
 end

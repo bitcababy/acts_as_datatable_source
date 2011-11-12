@@ -3,53 +3,60 @@ module Datatable
 		attr_accessor :sEcho, :iDisplayStart, :iDisplayLength, :iColumns, :sColumns, :mDataProps
 		attr_accessor :bSortables, :iSortingCols, :iSortCols, :sSortDirs
 		attr_accessor :sSearch, :bRegex, :bSearchables, :bSearches, :sRegexes
+		attr_accessor :select_string, :order_string, :where_string
+		attr_accessor :klass, :opts
 
 		def initialize(opts)
-			initialize_basics(opts)
-			initialize_sorts(opts)
-			initialize_searches(opts)
+			self.opts = opts
+			initialize_basics
+			initialize_sorts
+			initialize_searches
+			@select_string = self.construct_select
+			@order_string = self.construct_order
+			@where_string = self.construct_conditions
 			return self
 		end
 
-		def initialize_basics(opts)
-			self.sEcho = opts["sEcho"]
-			self.iDisplayStart = opts["iDisplayStart"].to_i
-			self.iDisplayLength = opts["iDisplayLength"].to_i
-			self.iColumns = opts["iColumns"].to_i
-			self.sColumns = opts["sColumns"].split(",")
-			self.sSearch = opts["sSearch"]
-			self.iSortingCols = opts["iSortingCols"].to_i
+		def initialize_basics
+			self.sEcho = @opts["sEcho"]
+			self.iDisplayStart = @opts["iDisplayStart"].to_i
+			self.iDisplayLength = @opts["iDisplayLength"].to_i
+			self.iColumns = @opts["iColumns"].to_i
+			self.sColumns = @opts["sColumns"].split(",")
+			self.sSearch = @opts["sSearch"]
+			self.iSortingCols = @opts["iSortingCols"].to_i
 		end
 
-		def initialize_sorts(opts)
-			self.bSortables = (0..@iColumns-1).collect { |i| opts["bSortable_#{i}"] == "true" }
+		def initialize_sorts
+			self.bSortables = (0..@iColumns-1).collect { |i| @opts["bSortable_#{i}"] == "true" }
 
 			self.iSortCols = []
 			self.sSortDirs = []
 			return if iSortingCols == 0
 	
 			@iSortingCols.times do |i|
-				@iSortCols << opts["iSortCol_#{i}"].to_i
-				@sSortDirs << opts["sSortDir_#{i}"].upcase
+				@iSortCols << @opts["iSortCol_#{i}"].to_i
+				@sSortDirs << @opts["sSortDir_#{i}"].upcase
 			end
+			
 		end
 
-		def initialize_searches(opts)
+		def initialize_searches
 			@bSearchables = []
 			@bSearches = []
 			@sRegexes = []
 	
 			@iColumns.times do |i|
-				@bSearchables << (opts["bSearchable_#{i}"] == "true")
-				@bSearches << opts["sSearch_#{i}"]
-				@sRegexes << (opts["bRegex_#{i}"] == "true")
+				@bSearchables << (@opts["bSearchable_#{i}"] == "true")
+				@bSearches << @opts["sSearch_#{i}"]
+				@sRegexes << (@opts["bRegex_#{i}"] == "true")
 			end
 		end
 
 		def args_for_find
-			args = {select: self.select, limit: @iDisplayLength, offset: @iDisplayStart - 1}
-			args[:conditions] = self.conditions if self.searchable?
-			args[:order] = self.order if self.sortable?
+			args = {select: @select_string, limit: @iDisplayLength, offset: @iDisplayStart - 1}
+			args[:conditions] = self.construct_conditions if self.searchable?
+			args[:order] = self.construct_order if self.sortable?
 			return args
 		end
 
@@ -66,22 +73,36 @@ module Datatable
 			@iSortingCols > 0
 		end
 
-		def select
-			@sColumns.join(",")
+		def construct_select
+			cols = @sColumns
+			cols = (0..iColumns-1).collect do |i|
+				sSelect = @opts["sSelect_#{i}"]
+				if sSelect then
+					"#{sSelect} AS #{@sColumns[i]}"
+				else
+					@sColumns[i]
+				end
+			end
+			return cols.join(',')
 		end
 
-		def order
-			res = (0..@iSortingCols-1).collect do |i|
-				@sColumns[@iSortCols[i]] + " " + @sSortDirs[i]
+		def construct_order
+			res = (0..@iSortingCols - 1).collect do |i|
+				sort = @opts["sSort_#{i}"]
+				if sort then
+					sort.gsub("DIR", @sSortDirs[i])
+				else
+					@sColumns[@iSortCols[i]] + " " + @sSortDirs[i]
+				end
 			end
 			res.join(",")
 		end
 
-		def conditions
-			res = (0..@iColumns-1).collect do |i|
+		def construct_conditions
+			res = (0..@iColumns - 1).collect do |i|
 				if @bSearchables[i] && !@bSearches[i].empty? then
 					if @sRegexes[i] then
-						"#{sColumns[i]} ~ #{@bSearches[i]}"
+						"#{sColumns[i]} ~ '#{@bSearches[i]}'"
 					else 
 						"#{sColumns[i]} LIKE '#{@bSearches[i]}'"
 					end
@@ -91,5 +112,6 @@ module Datatable
 			end
 			res.compact.join(" AND ")
 		end
+
 	end
 end

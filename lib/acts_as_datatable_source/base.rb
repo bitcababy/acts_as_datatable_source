@@ -9,6 +9,7 @@ module ActsAsDatatableSource
 		def acts_as_datatable_source
 			unless acts_as_datatable_source?
 				class_eval do
+
 					def self.select_for_datatable(opts)
 						dr = Datatable::Request.new(opts)
 						self.find :all, dr.args_for_find
@@ -16,19 +17,18 @@ module ActsAsDatatableSource
 
 					def self.count_for_datatable(opts)
 						dr = Datatable::Request.new(opts)
-						self.count :conditions => dr.conditions
+						self.count :conditions => dr.construct_conditions
 					end
 
 					def self.construct_for_json(opts)
 						dr = Datatable::Request.new(opts)
 						objects = select_for_datatable(opts)
-						ret = {"sEcho" => dr.sEcho, 'iTotalRecords' => self.count, 'sColumns' => dr.select }
+						ret = {"sEcho" => dr.sEcho, 'iTotalRecords' => self.count, 'sColumns' => dr.construct_select}
 
 						ret["iTotalDisplayRecords"] = self.count_for_datatable(opts)
 						ret["aaData"] = objects.collect do |problem|
 							dr.sColumns.collect {|col| problem[col]}
 						end
-
 						return ret
 					end
 

@@ -3,10 +3,9 @@ require 'spec_helper'
 describe Datatable::Request do
 	include DatatableHelperMethods
 	before :each do
-		@columns = %W(problem answer year column)
+		@columns = %W(problem year meet_round number)
 		@opts = create_opts(@columns)
 	end
-	
 		
 	context "initialization" do
 		describe "#initialize_basics" do
@@ -16,6 +15,10 @@ describe Datatable::Request do
 				@obj = Datatable::Request.new(@opts)
 			end
 	
+			it "sets opts" do
+				@obj.opts.should == @opts
+			end
+
 			it "sets sEcho" do
 				@obj.sEcho.should == @opts["sEcho"]
 			end
@@ -125,21 +128,55 @@ describe Datatable::Request do
 		end
 	end
 
-	describe "#conditions" do
+	describe "#construct_conditions" do
 		it "constructs a WHEREable string" do
 			@opts["sSearch_0"] = "foo"
 			@opts["bSearchable_0"] = "true"
+			@opts["bRegex_0"] = "false"
 		
 			@obj = Datatable::Request.new(@opts)
-			@obj.conditions.should == "problem LIKE 'foo'"
+			@obj.construct_conditions.should == "problem LIKE 'foo'"
+		end
+		it "constructs a WHEREable string" do
+			@opts["sSearch_0"] = "foo"
+			@opts["bSearchable_0"] = "true"
+			@opts["bRegex_0"] = "true"
+		
+			@obj = Datatable::Request.new(@opts)
+			@obj.construct_conditions.should == "problem ~ 'foo'"
 		end
 	end
 
-	describe "#order" do
+	describe "#construct_order" do
 		it "creates an SQL fragment for the ORDER clause" do
 			make_sortable(@opts)
 			@obj = Datatable::Request.new(@opts)
-			@obj.order.should == "#{@columns[@opts['iSortCol_0']]} #{@opts['sSortDir_0'].upcase}"
+			@obj.construct_order.should == "#{@columns[@opts['iSortCol_0']]} #{@opts['sSortDir_0'].upcase}"
+		end
+		it "uses overrides when provided" do
+			@opts["sSort_1"] = "meet DIR, round DIR"
+			@opts["iSortingCols"] = 2
+			@opts["iSortCols"] = 
+			@opts["iSortCol_0"] = 1
+			@opts["sSortDir_0"] = "asc"
+			@opts["iSortCol_1"] = 2
+			@opts["sSortDir_1"] = "asc"
+			@obj = Datatable::Request.new(@opts)
+			@obj.construct_order.should =~ /year ASC,\s*meet ASC,\s*round ASC/
+		end
+	end
+
+	describe "#construct_select" do
+		it "should be return a comma-delimited list of columnsif there are no overrides" do
+			@obj = Datatable::Request.new(@opts)
+			@obj.construct_select.should == @columns.join(',')
+		end
+		it "should replace columns with overrides if they exist" do
+			@opts["sColumns"] = "problem,year,meet_and_round,number"
+			override = "CONCATENATE(meet,'/',round)"
+			@opts["sSelect_2"] = override
+			@obj = Datatable::Request.new(@opts)
+			@obj.construct_select.should == "problem,year,#{override} AS meet_and_round,number"
 		end
 	end
 
@@ -149,12 +186,6 @@ describe Datatable::Request do
 			@args = @obj.args_for_find
 		end
 
-		describe ":select" do
-			it "should be a comma-delimited list of columns" do
-				@args[:select].should be_kind_of String
-			end
-		end
-		
 		describe ":limit" do
 			it "should be an integer" do
 				@args[:limit].should be_kind_of Integer
@@ -181,7 +212,7 @@ describe Datatable::Request do
 			end
 		end
 	
-		describe ":order" do
+		describe ":construct_order" do
 			it "shouldn't exist if not sortable" do
 				@obj = Datatable::Request.new(@opts)
 				@args = @obj.args_for_find

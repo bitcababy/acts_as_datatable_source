@@ -20,8 +20,17 @@ describe TestModel do
 		it "responds to :construct_for_json" do
 			TestModel.should respond_to(:construct_for_json)
 		end
+		it "responds to :acts_as_datatable_source?" do
+			TestModel.should respond_to(:acts_as_datatable_source?)
+		end
 	end
 
+	describe "#acts_as_datatable_source?" do
+		it "should return true" do
+			TestModel.acts_as_datatable_source?.should be_true
+		end
+	end
+	
 	describe "#count_for_datatable" do
 		it "should return the number of records" do
 			5.times {Factory :test_model}

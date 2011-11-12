@@ -25,20 +25,20 @@ describe TestModel do
 		end
 	end
 
-	describe "#acts_as_datatable_source?" do
+	describe "::acts_as_datatable_source?" do
 		it "should return true" do
 			TestModel.acts_as_datatable_source?.should be_true
 		end
 	end
 	
-	describe "#count_for_datatable" do
+	describe "::count_for_datatable" do
 		it "should return the number of records" do
 			5.times {Factory :test_model}
 			TestModel.count_for_datatable(@opts).should == 5
 		end
 	end
 	
-	describe "#select_for_datatable" do
+	describe "::select_for_datatable" do
 		it "should return the 'iDisplayLength' number of records if there are enough" do
 			20.times {Factory :test_model}
 			@opts["iDisplayLength"] = "10"
@@ -56,7 +56,7 @@ describe TestModel do
 		end
 	end
 
-	describe "#construct_for_json" do
+	describe "::construct_for_json" do
 		before :each do
 			@models = []
 			@models << Factory(:test_model, :foo => 'b', :bar => 2)

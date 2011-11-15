@@ -23,7 +23,7 @@ module ActsAsDatatableSource
 					def self.construct_for_json(opts)
 						dr = Datatable::Request.new(opts)
 						objects = select_for_datatable(opts)
-						ret = {"sEcho" => dr.sEcho, 'iTotalRecords' => self.count, 'sColumns' => dr.construct_select}
+						ret = {"sEcho" => dr.sEcho, 'iTotalRecords' => self.count, 'sColumns' => dr.sColumns}
 
 						ret["iTotalDisplayRecords"] = self.count_for_datatable(opts)
 						ret["aaData"] = objects.collect do |problem|

@@ -1,4 +1,6 @@
-$:.push File.expand_path("../lib", __FILE__)
+# $:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
+
 
 # Maintain your gem's version:
 require "acts_as_datatable_source/version"
@@ -15,9 +17,6 @@ Gem::Specification.new do |s|
 
 	s.rdoc_options     = ["--charset=UTF-8"]
 
-	s.rubygems_version = ">= 1.6.1"
-  s.files = `git ls-files`.split("\n")
-  s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
 
   s.add_runtime_dependency 		"rails", "~> 3.1.1"
   s.add_runtime_dependency 		"json"
@@ -35,6 +34,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'rb-fsevent'
   s.add_development_dependency 'haml'
-  s.require_paths = ['lib']
+
+	s.rubygems_version = ">= 1.6.1"
+  s.files            = `git ls-files`.split("\n")
+  s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
+  s.rdoc_options     = ["--charset=UTF-8"]
+  s.require_path     = "lib"
 
 end

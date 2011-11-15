@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.version     = ActsAsDatatableSource::VERSION
   s.authors     = ["Meredith Lesly"]
   s.email       = ["meredith@xoala.com"]
-  s.homepage    = "TODO"
+  s.homepage    = "http://github.com/bitcababy/acts_as_datatable_source/"
   s.summary     = "acts_as_datatable_source-#{s.version}"
   s.description = "Turns an active_record model into a source for jquery datatable"
 

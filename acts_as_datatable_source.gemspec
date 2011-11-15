@@ -10,10 +10,10 @@ Gem::Specification.new do |s|
   s.name        = "acts_as_datatable_source"
   s.version     = ActsAsDatatableSource::VERSION
   s.authors     = ["Meredith Lesly"]
-  s.email       = ["TODO: Your email"]
+  s.email       = ["meredith@xoala.com"]
   s.homepage    = "TODO"
   s.summary     = "acts_as_datatable_source-#{s.version}"
-  s.description = "TODO: Description of ActsAsDatatableSource."
+  s.description = "Turns an active_record model into a source for jquery datatable"
 
 	s.rdoc_options     = ["--charset=UTF-8"]
 

@@ -54,7 +54,7 @@ module Datatable
 		end
 
 		def args_for_find
-			args = {select: @select_string, limit: @iDisplayLength, offset: @iDisplayStart - 1}
+			args = {select: @select_string, limit: @iDisplayLength, offset: @iDisplayStart}
 			args[:conditions] = self.construct_conditions if self.searchable?
 			args[:order] = self.construct_order if self.sortable?
 			return args

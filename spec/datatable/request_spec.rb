@@ -167,16 +167,15 @@ describe Datatable::Request do
 	end
 
 	describe "#construct_select" do
-		it "should be return a comma-delimited list of columnsif there are no overrides" do
+		it "should be return a comma-delimited list of columns if there are no overrides" do
 			@obj = Datatable::Request.new(@opts)
 			@obj.construct_select.should == @columns.join(',')
 		end
-		it "should replace columns with overrides if they exist" do
+		it "should look for sSelect_x and fix up the select list" do
 			@opts["sColumns"] = "problem,year,meet_and_round,number"
-			override = "CONCATENATE(meet,'/',round)"
-			@opts["sSelect_2"] = override
+			@opts['sSelect_2'] = 'meet,round'
 			@obj = Datatable::Request.new(@opts)
-			@obj.construct_select.should == "problem,year,#{override} AS meet_and_round,number"
+			@obj.construct_select.should == "problem,year,meet,round,number"
 		end
 	end
 

@@ -4,7 +4,7 @@ module Datatable
 		attr_accessor :bSortables, :iSortingCols, :iSortCols, :sSortDirs
 		attr_accessor :sSearch, :bRegex, :bSearchables, :bSearches, :sRegexes
 		attr_accessor :select_string, :order_string, :where_string
-		attr_accessor :klass, :opts
+		attr_accessor :opts
 
 		def initialize(opts)
 			self.opts = opts
@@ -78,7 +78,7 @@ module Datatable
 			cols = (0..iColumns-1).collect do |i|
 				sSelect = @opts["sSelect_#{i}"]
 				if sSelect then
-					"#{sSelect} AS #{@sColumns[i]}"
+					sSelect
 				else
 					@sColumns[i]
 				end

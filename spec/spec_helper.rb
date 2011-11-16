@@ -7,7 +7,7 @@ ENV["RAILS_ENV"] = "test"
 
 $LOAD_PATH << "." unless $LOAD_PATH.include?(".")
 require 'logger'
-require 'factory_girl'
+require 'factory_girl_rails'
 
 begin
   require "rubygems"

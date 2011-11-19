@@ -26,10 +26,10 @@ rescue Bundler::GemNotFound
 end
 
 Bundler.require
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+# require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require File.expand_path('../../lib/acts_as_datatable_source', __FILE__)
 
-require 'ammeter/init'
+# require 'ammeter/init'
 
 unless [].respond_to?(:freq)
   class Array
@@ -73,12 +73,13 @@ if File.exists?(database_yml)
     ActiveRecord::Migration.verbose = false
     
     load(File.dirname(__FILE__) + '/schema.rb')
+    load(File.dirname(__FILE__) + '/models.rb')
   end  
   
 else
   raise "Please create #{database_yml} first to configure your database. Take a look at: #{database_yml}.sample"
 end
-
+# 
 def clean_database!
   models = [TestModel]
   models.each do |model|

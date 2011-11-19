@@ -9,7 +9,6 @@ module ActsAsDatatableSource
 		def acts_as_datatable_source
 			unless acts_as_datatable_source?
 				class_eval do
-					self.class_variable_set(:@@ds_transforms, {})
 					
 					def self.select_for_datatable(opts)
 						dr = Datatable::Request.new(opts)
@@ -53,10 +52,6 @@ module ActsAsDatatableSource
 						end
 					end
 
-					def self.datatable_source_transforms(args)
-						@@ds_transforms = args
-					end
-
 					def self.construct_select(dr)
 						cols = dr.sColumns.collect { |col| self.ds_select_for col}
 						return cols.join(',')
@@ -77,22 +72,26 @@ module ActsAsDatatableSource
 						res.join(",")
 					end
 					
-					# 	def self.construct_conditions
-					# 		res = (0..@iColumns - 1).collect do |i|
-					# 			if @bSearchables[i] && !@bSearches[i].empty? then
-					# 				if @sRegexes[i] then
-					# 					"#{sColumns[i]} ~ '#{@bSearches[i]}'"
-					# 				else 
-					# 					"#{sColumns[i]} LIKE '#{@bSearches[i]}'"
-					# 				end
-					# 			else
-					# 				nils
-					# 			end
-					# 		end
-					# 		res.compact.join(" AND ")
-					# 	end
-						
-
+					def self.construct_conditions(dr)
+						res = (0..dr.iColumns - 1).collect do |i|
+							if dr.bSearchables[i] && !dr.bSearches[i].empty? then
+								if dr.sRegexes[i] then
+									"#{dr.sColumns[i]} ~ '#{dr.bSearches[i]}'"
+								else 
+									"#{dr.sColumns[i]} LIKE '#{dr.bSearches[i]}'"
+								end
+							else
+								nil
+							end
+						res.compact.join(" AND ")
+						end
+					end # construct_conditions
+	
+					def self.searchable?(dr)
+						return true if !dr.sSearch.empty?
+						return dr.bSearchables.index {|obj| obj}
+					end
+	
 				end
 			end
 		end

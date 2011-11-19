@@ -3,7 +3,7 @@ module DatatableHelperMethods
 		opts = {
 			"sEcho"=>"1",
 			"iColumns"=>columns.count,
-			"sColumns"=> columns.join(","),
+			"sColumns"=> columns.join(','),
 			"iDisplayStart"=>"0",
 			"iDisplayLength"=>"10",
 			"sSearch"=>"",
@@ -19,17 +19,5 @@ module DatatableHelperMethods
 		return opts
 	end
 	
-	def make_searchable(opts)
-		opts["iSearchCols"] = "1"
-		opts["sSearch"] = ""
-		opts["bSearchable_0"] = "true"
-		opts["sSearch_0"] = "foo"
-	end
-	
-	def make_sortable(opts)
-		opts["iSortingCols"] = "1"
-		opts["iSortCol_0"] = 0
-		opts["sSortDir_0"] = "asc"
-	end
 	
 end

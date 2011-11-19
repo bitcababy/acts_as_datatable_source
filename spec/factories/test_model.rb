@@ -1,18 +1,28 @@
 Factory.define :test_model do |p|
-	p.foo				{ Factory.next :foo}
-	p.bar				{ Factory.next :bar }
-	p.quux			{Factory.next :quux}
+	p.problem		{ Factory.next :problem }
+	p.year			{ Factory.next :year }
+	p.meet			{ Factory.next :meet }
+	p.round			{ Factory.next :round }
+	p.number		{ Factory.next :number }
 end
 
-Factory.sequence :foo do |n|
-	"foo_#{n}"
+Factory.sequence :problem do |n|
+	"Problem #{n}"
 end
 
-Factory.sequence :bar do |n|
-	n
+Factory.sequence :year do |n|
+	[2001,2002,2003][n%3]
 end
 
-
-Factory.sequence :quux do |n|
-	n*2
+Factory.sequence :meet do |n|
+	(n%6)+1
 end
+
+Factory.sequence :round do |n|
+	(n%4)+1
+end
+
+Factory.sequence :number do |n|
+	(n%3)+1
+end
+

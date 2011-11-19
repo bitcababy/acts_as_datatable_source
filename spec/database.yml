@@ -1,3 +1,4 @@
 sqlite3:
   adapter: sqlite3
   database: acts_as_datatable_source.sqlite3
+  
